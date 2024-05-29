@@ -1,6 +1,6 @@
 // import { UserOperation } from '@safe-global/safe-4337-provider'
 import { BigNumberish, BytesLike, Contract, Signer, ethers } from 'ethers'
-import { PackedUserOperationStruct as PackedUserOperation } from '../../typechain-types/contracts/Safe7579'
+import { PackedUserOperationStruct as PackedUserOperation } from '../../typechain-types/contracts/safe7579/Safe7579'
 
 import {
   Address,

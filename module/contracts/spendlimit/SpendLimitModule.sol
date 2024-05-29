@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.23;
 
-import { ERC7579ValidatorBase } from "../module/ERC7579ValidatorBase.sol";
+import { ERC7579ValidatorBase } from "../module-bases/ERC7579ValidatorBase.sol";
 import { PackedUserOperation } from
     "@account-abstraction/contracts/core/UserOperationLib.sol";
 
@@ -9,7 +9,7 @@ import { SignatureCheckerLib } from "solady/utils/SignatureCheckerLib.sol";
 import { ECDSA } from "solady/utils/ECDSA.sol";
 import { ExecutionLib } from "../safe7579/lib/ExecutionLib.sol";
 
-import { ERC7579ExecutorBase } from "../module/ERC7579ExecutorBase.sol";
+import { ERC7579ExecutorBase } from "../module-bases/ERC7579ExecutorBase.sol";
 
 
 contract SpendLimitModule is ERC7579ValidatorBase, ERC7579ExecutorBase {

@@ -75,7 +75,7 @@
 "@babel/compat-data@^7.23.3", "@babel/compat-data@^7.23.5":
   version "7.23.5"
 
-"@babel/core@^7.11.6", "@babel/core@^7.18.9", "@babel/core@^7.20.12", "@babel/core@^7.23.0", "@babel/core@^7.23.2", "@babel/core@^7.23.5":
+"@babel/core@^7.0.0", "@babel/core@^7.0.0-0", "@babel/core@^7.0.0-0 || ^8.0.0-0 <8.0.0", "@babel/core@^7.11.6", "@babel/core@^7.12.0", "@babel/core@^7.13.0", "@babel/core@^7.18.9", "@babel/core@^7.20.12", "@babel/core@^7.23.0", "@babel/core@^7.23.2", "@babel/core@^7.23.5", "@babel/core@^7.4.0 || ^8.0.0-0 <8.0.0":
   version "7.23.5"
   dependencies:
     "@ampproject/remapping" "^2.2.0"
@@ -839,7 +839,7 @@
     "@babel/helper-create-regexp-features-plugin" "^7.22.15"
     "@babel/helper-plugin-utils" "^7.22.5"
 
-"@babel/preset-env@^7.23.2":
+"@babel/preset-env@^7.1.6", "@babel/preset-env@^7.23.2":
   version "7.23.5"
   dependencies:
     "@babel/compat-data" "^7.23.5"
@@ -1088,10 +1088,10 @@
 "@colors/colors@1.5.0":
   version "1.5.0"
 
-"@csstools/css-parser-algorithms@^2.3.1":
+"@csstools/css-parser-algorithms@^2.3.1", "@csstools/css-parser-algorithms@^2.3.2":
   version "2.3.2"
 
-"@csstools/css-tokenizer@^2.2.0":
+"@csstools/css-tokenizer@^2.2.0", "@csstools/css-tokenizer@^2.2.1":
   version "2.2.1"
 
 "@csstools/media-query-list-parser@^2.1.4":
@@ -1473,26 +1473,35 @@
   dependencies:
     "@floating-ui/utils" "^0.1.3"
 
-"@floating-ui/dom@^1.5.1":
+"@floating-ui/dom@^1.0.0":
   version "1.5.3"
   dependencies:
     "@floating-ui/core" "^1.4.2"
     "@floating-ui/utils" "^0.1.3"
 
-"@floating-ui/react-dom@^2.0.0", "@floating-ui/react-dom@^2.0.1":
-  version "2.0.4"
+"@floating-ui/react-dom@^2.0.0", "@floating-ui/react-dom@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/@floating-ui/react-dom/-/react-dom-2.1.0.tgz"
+  integrity sha512-lNzj5EQmEKn5FFKc04+zasr09h/uX8RtJRNj5gUXsSQIXHVWTVh+hVAg1vOMCexkX8EgvemMvIFpQfkosnVNyA==
   dependencies:
-    "@floating-ui/dom" "^1.5.1"
+    "@floating-ui/dom" "^1.0.0"
 
-"@floating-ui/react@^0.24.8":
-  version "0.24.8"
+"@floating-ui/react@^0.26.9":
+  version "0.26.16"
+  resolved "https://registry.npmjs.org/@floating-ui/react/-/react-0.26.16.tgz"
+  integrity sha512-HEf43zxZNAI/E781QIVpYSF3K2VH4TTYZpqecjdsFkjsaU1EbaWcM++kw0HXFffj7gDUcBFevX8s0rQGQpxkow==
   dependencies:
-    "@floating-ui/react-dom" "^2.0.1"
-    aria-hidden "^1.2.3"
-    tabbable "^6.0.1"
+    "@floating-ui/react-dom" "^2.1.0"
+    "@floating-ui/utils" "^0.2.0"
+    tabbable "^6.0.0"
 
 "@floating-ui/utils@^0.1.3":
   version "0.1.6"
+
+"@floating-ui/utils@^0.2.0":
+  version "0.2.2"
+  resolved "https://registry.npmjs.org/@floating-ui/utils/-/utils-0.2.2.tgz"
+  integrity sha512-J4yDIIthosAsRZ5CPYP/jQvUAQtlZTTD/4suA08/FEnlxqW3sKS9iAhgsa9VYLZ6vDHn/ixJgIqRQPotoBjxIw==
 
 "@gelatonetwork/relay-sdk@^3.1.0":
   version "3.5.0"
@@ -1648,15 +1657,17 @@
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.0.0"
 
-"@mantine/core@7.3.0":
-  version "7.3.0"
+"@mantine/core@7.8.1":
+  version "7.8.1"
+  resolved "https://registry.npmjs.org/@mantine/core/-/core-7.8.1.tgz"
+  integrity sha512-dttbP2BhBzFJYBqgAQedJRca5+MXlJbppRhRsufnFeO7YC/UpZutOoHQ9dxGEQnhAWJ/d+wuRvYWG/gXex+wYQ==
   dependencies:
-    "@floating-ui/react" "^0.24.8"
-    clsx "2.0.0"
+    "@floating-ui/react" "^0.26.9"
+    clsx "2.1.0"
     react-number-format "^5.3.1"
     react-remove-scroll "^2.5.7"
     react-textarea-autosize "8.5.3"
-    type-fest "^3.13.1"
+    type-fest "^4.12.0"
 
 "@mantine/dates@^7.8.1":
   version "7.8.1"
@@ -1665,8 +1676,10 @@
   dependencies:
     clsx "2.1.0"
 
-"@mantine/hooks@7.3.0":
-  version "7.3.0"
+"@mantine/hooks@7.8.1":
+  version "7.8.1"
+  resolved "https://registry.npmjs.org/@mantine/hooks/-/hooks-7.8.1.tgz"
+  integrity sha512-zCLqnxTUR2N6Awbt4rv/26UKTc75dXTVmCPsWUb6wdQExuC28fucG6kMoNYHVmOBDq9f3KP9zWOGDelHM2ogZA==
 
 "@marsidev/react-turnstile@^0.4.1":
   version "0.4.1"
@@ -1872,7 +1885,7 @@
   dependencies:
     "@noble/hashes" "1.3.3"
 
-"@noble/hashes@^1.3.1", "@noble/hashes@^1.3.2", "@noble/hashes@~1.3.2", "@noble/hashes@1.3.2":
+"@noble/hashes@^1.3.1", "@noble/hashes@~1.3.2", "@noble/hashes@1.3.2":
   version "1.3.2"
 
 "@noble/hashes@^1.4.0":
@@ -3028,7 +3041,7 @@
   resolved "https://registry.npmjs.org/@tanstack/virtual-core/-/virtual-core-3.5.0.tgz"
   integrity sha512-KnPRCkQTyqhanNC0K63GBG3wA8I+D1fQuVnAvcBF8f13akOKeQp1gSbu6f77zCxhEk727iV5oQnbHLYzHrECLg==
 
-"@testing-library/dom@^9.0.0", "@testing-library/dom@^9.3.3":
+"@testing-library/dom@^9.0.0", "@testing-library/dom@^9.3.3", "@testing-library/dom@>=7.21.4":
   version "9.3.3"
   dependencies:
     "@babel/code-frame" "^7.10.4"
@@ -3064,38 +3077,6 @@
 
 "@tootallnate/once@2":
   version "2.0.0"
-
-"@turnkey/api-key-stamper@^0.3.1", "@turnkey/api-key-stamper@0.3.1":
-  version "0.3.1"
-  resolved "https://registry.npmjs.org/@turnkey/api-key-stamper/-/api-key-stamper-0.3.1.tgz"
-  integrity sha512-aPeBkz5MgUjsgl+lf7Kz7g4CM+DR9w+G1bV6Zl4mNxTgR37VbEmQ/G/UrbYu7/M0bTVzHWIDm5vuzwc8cfaQ2w==
-
-"@turnkey/http@^2.5.1", "@turnkey/http@2.5.1":
-  version "2.5.1"
-  resolved "https://registry.npmjs.org/@turnkey/http/-/http-2.5.1.tgz"
-  integrity sha512-pwo6jmUYjuJ3LWPbNAE2frdTUGxrIqSucWyg52JQDx2xv3VMKpG1HlknzBFZOj4p+MjN5TBXisy0J7HASVTwqA==
-  dependencies:
-    "@turnkey/api-key-stamper" "0.3.1"
-    "@turnkey/webauthn-stamper" "0.4.3"
-    cross-fetch "^3.1.5"
-
-"@turnkey/viem@^0.4.4":
-  version "0.4.4"
-  resolved "https://registry.npmjs.org/@turnkey/viem/-/viem-0.4.4.tgz"
-  integrity sha512-pNnhAVn3X2SEEzzIVfj2dnjB10QBiveoI6IorZZkU0fWK2RQ1AyZA5oYPLDsTqEo5o6OV97sqJ4/kCUMdmgWQQ==
-  dependencies:
-    "@turnkey/api-key-stamper" "0.3.1"
-    "@turnkey/http" "2.5.1"
-    cross-fetch "^4.0.0"
-    typescript "^5.1"
-
-"@turnkey/webauthn-stamper@^0.4.3", "@turnkey/webauthn-stamper@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.npmjs.org/@turnkey/webauthn-stamper/-/webauthn-stamper-0.4.3.tgz"
-  integrity sha512-hJuIpwny44TOrkFJiK8uA29RRO1A9xJK3KbN4PWqBxTLh1r7ntkl3zslc/qAkgnw6f+OREQbhQGoYkTdIX+7QA==
-  dependencies:
-    "@noble/hashes" "^1.3.2"
-    buffer "^6.0.3"
 
 "@types/aria-query@^5.0.1":
   version "5.0.1"
@@ -3285,7 +3266,7 @@
     "@types/node" "*"
     form-data "^4.0.0"
 
-"@types/node@*", "@types/node@^20.10.4":
+"@types/node@*", "@types/node@^18.0.0 || >=20.0.0", "@types/node@^20.10.4", "@types/node@>= 14":
   version "20.10.4"
   resolved "https://registry.npmjs.org/@types/node/-/node-20.10.4.tgz"
   integrity sha512-D08YG6rr8X90YB56tSIuBaddy/UXAA9RKJoFvrsnogAum/0pmjkgi4+2nx96A330FmioegBWmEYQ+syqCFaveg==
@@ -3332,12 +3313,12 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-dom@^18.0.0", "@types/react-dom@^18.2.14":
+"@types/react-dom@*", "@types/react-dom@^18.0.0", "@types/react-dom@^18.2.14":
   version "18.2.17"
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^18.2.36", "@types/react@>=16":
+"@types/react@*", "@types/react@^16.8.0 || ^17.0.0 || ^18.0.0", "@types/react@^16.9.0 || ^17.0.0 || ^18.0.0", "@types/react@^18.2.36", "@types/react@>=16", "@types/react@>=16.8":
   version "18.2.42"
   dependencies:
     "@types/prop-types" "*"
@@ -3393,7 +3374,7 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@typescript-eslint/eslint-plugin@^6.9.1":
+"@typescript-eslint/eslint-plugin@^5.13.0 || ^6.0.0", "@typescript-eslint/eslint-plugin@^6.8.0", "@typescript-eslint/eslint-plugin@^6.9.1":
   version "6.13.2"
   dependencies:
     "@eslint-community/regexpp" "^4.5.1"
@@ -3408,7 +3389,7 @@
     semver "^7.5.4"
     ts-api-utils "^1.0.1"
 
-"@typescript-eslint/parser@^6.9.1":
+"@typescript-eslint/parser@^5.0.0 || ^6.0.0", "@typescript-eslint/parser@^6.0.0 || ^6.0.0-alpha", "@typescript-eslint/parser@^6.8.0", "@typescript-eslint/parser@^6.9.1":
   version "6.13.2"
   dependencies:
     "@typescript-eslint/scope-manager" "6.13.2"
@@ -3802,6 +3783,13 @@
     "@noble/curves" "^1.3.0"
     "@simplewebauthn/browser" "^8.3.4"
 
+"@zerodev/sdk@^5.2.1":
+  version "5.2.15"
+  resolved "https://registry.npmjs.org/@zerodev/sdk/-/sdk-5.2.15.tgz"
+  integrity sha512-c88ByIINOa+wcpdZRRDL6y6Nx9gUOZwHWJWpZESxQwhkh0tPabBGKaqqYmiCdzFZWMjvSNly7L2yS8DSQWkWeA==
+  dependencies:
+    semver "^7.6.0"
+
 abab@^2.0.6:
   version "2.0.6"
 
@@ -3845,13 +3833,13 @@ acorn-walk@^7.2.0:
 acorn-walk@^8.2.0:
   version "8.3.1"
 
-acorn@^7.4.1:
-  version "7.4.1"
-
-acorn@^8.10.0, acorn@^8.11.2, acorn@^8.11.3, acorn@^8.9.0:
+"acorn@^6.0.0 || ^7.0.0 || ^8.0.0", acorn@^8.10.0, acorn@^8.11.2, acorn@^8.11.3, acorn@^8.9.0:
   version "8.11.3"
   resolved "https://registry.npmjs.org/acorn/-/acorn-8.11.3.tgz"
   integrity sha512-Y9rRfJG5jcKOE0CLisYbojUjIrIEE7AGMzA/Sm4BslANhbS+cDMpgBdcPT91oJ7OuJ9hYJBx59RjbhxVnrF8Xg==
+
+acorn@^7.4.1:
+  version "7.4.1"
 
 address@^1.0.1:
   version "1.2.2"
@@ -3936,7 +3924,7 @@ argparse@^1.0.7:
 argparse@^2.0.1:
   version "2.0.1"
 
-aria-hidden@^1.1.1, aria-hidden@^1.2.3:
+aria-hidden@^1.1.1:
   version "1.2.3"
   dependencies:
     tslib "^2.0.0"
@@ -4332,7 +4320,7 @@ browserify-zlib@^0.2.0:
   dependencies:
     pako "~1.0.5"
 
-browserslist@^4.21.9:
+browserslist@^4.21.9, "browserslist@>= 4.21.0":
   version "4.21.9"
   dependencies:
     caniuse-lite "^1.0.30001503"
@@ -4598,9 +4586,6 @@ clsx@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/clsx/-/clsx-1.2.1.tgz"
   integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
-
-clsx@2.0.0:
-  version "2.0.0"
 
 clsx@2.1.0:
   version "2.1.0"
@@ -4887,7 +4872,7 @@ dateformat@^4.6.3:
   resolved "https://registry.npmjs.org/dateformat/-/dateformat-4.6.3.tgz"
   integrity sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==
 
-dayjs@^1.11.10:
+dayjs@^1.11.10, dayjs@>=1.0.0:
   version "1.11.10"
   resolved "https://registry.npmjs.org/dayjs/-/dayjs-1.11.10.tgz"
   integrity sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==
@@ -5185,7 +5170,7 @@ encode-utf8@^1.0.3:
 encodeurl@~1.0.2:
   version "1.0.2"
 
-encoding@^0.1.13:
+encoding@^0.1.0, encoding@^0.1.13:
   version "0.1.13"
   resolved "https://registry.npmjs.org/encoding/-/encoding-0.1.13.tgz"
   integrity sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==
@@ -5382,7 +5367,7 @@ esbuild-register@^3.5.0:
   dependencies:
     debug "^4.3.4"
 
-esbuild@^0.18.0, esbuild@^0.18.10:
+esbuild@^0.18.0, esbuild@^0.18.10, esbuild@>=0.10.0, "esbuild@>=0.12 <1":
   version "0.18.20"
   optionalDependencies:
     "@esbuild/android-arm" "0.18.20"
@@ -5490,7 +5475,7 @@ eslint-module-utils@^2.8.0:
   dependencies:
     debug "^3.2.7"
 
-eslint-plugin-import@^2.29.0:
+eslint-plugin-import@^2.25.2, eslint-plugin-import@^2.25.3, eslint-plugin-import@^2.28.1, eslint-plugin-import@^2.29.0:
   version "2.29.0"
   dependencies:
     array-includes "^3.1.7"
@@ -5511,7 +5496,7 @@ eslint-plugin-import@^2.29.0:
     semver "^6.3.1"
     tsconfig-paths "^3.14.2"
 
-eslint-plugin-jsx-a11y@^6.7.0:
+eslint-plugin-jsx-a11y@^6.5.1, eslint-plugin-jsx-a11y@^6.7.0, eslint-plugin-jsx-a11y@^6.7.1:
   version "6.8.0"
   dependencies:
     "@babel/runtime" "^7.23.2"
@@ -5531,10 +5516,10 @@ eslint-plugin-jsx-a11y@^6.7.0:
     object.entries "^1.1.7"
     object.fromentries "^2.0.7"
 
-eslint-plugin-react-hooks@^4.6.0:
+eslint-plugin-react-hooks@^4.3.0, eslint-plugin-react-hooks@^4.6.0:
   version "4.6.0"
 
-eslint-plugin-react@^7.33.2:
+eslint-plugin-react@^7.28.0, eslint-plugin-react@^7.33.2:
   version "7.33.2"
   dependencies:
     array-includes "^3.1.6"
@@ -5566,7 +5551,7 @@ eslint-visitor-keys@^3.3.0, eslint-visitor-keys@^3.4.1:
 eslint-visitor-keys@^3.4.3:
   version "3.4.3"
 
-eslint@^8.53.0:
+"eslint@^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8", "eslint@^3 || ^4 || ^5 || ^6 || ^7 || ^8", "eslint@^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0", "eslint@^6.0.0 || ^7.0.0 || >=8.0.0", "eslint@^7.0.0 || ^8.0.0", "eslint@^7.32.0 || ^8.2.0", eslint@^8.51.0, eslint@^8.53.0:
   version "8.55.0"
   dependencies:
     "@eslint-community/eslint-utils" "^4.2.0"
@@ -6342,7 +6327,7 @@ glob@^10.0.0:
     minipass "^5.0.0 || ^6.0.2 || ^7.0.0"
     path-scurry "^1.10.1"
 
-glob@^7.0.3, glob@^7.1.3, glob@^7.1.4, glob@^7.2.0:
+glob@^7.0.3, glob@^7.1.3, glob@^7.1.4, glob@^7.1.6, glob@^7.2.0:
   version "7.2.3"
   dependencies:
     fs.realpath "^1.0.0"
@@ -7110,7 +7095,7 @@ jscodeshift@^0.15.1:
     temp "^0.8.4"
     write-file-atomic "^2.3.0"
 
-jsdom@^22.1.0:
+jsdom@*, jsdom@^22.1.0:
   version "22.1.0"
   dependencies:
     abab "^2.0.6"
@@ -8103,7 +8088,7 @@ peek-stream@^1.1.0:
 pend@~1.2.0:
   version "1.2.0"
 
-permissionless@^0.1.20:
+permissionless@^0.1.18, permissionless@^0.1.20:
   version "0.1.20"
   resolved "https://registry.npmjs.org/permissionless/-/permissionless-0.1.20.tgz"
   integrity sha512-e+jHLOdDvOiHEAIKGPo1HCviTOnwxSkqFmfCQve7Zl1VbeFTBYWZF78fsZlhO5Gje1irfqsh+SCfbpPjFA4fcA==
@@ -8292,7 +8277,7 @@ postcss-simple-vars@^7.0.0, postcss-simple-vars@^7.0.1:
 postcss-value-parser@^4.0.2, postcss-value-parser@^4.2.0:
   version "4.2.0"
 
-postcss@^8.4.27, postcss@^8.4.28, postcss@^8.4.31, postcss@^8.4.32:
+postcss@^8.2.1, postcss@^8.2.14, postcss@^8.3.3, postcss@^8.4.21, postcss@^8.4.27, postcss@^8.4.28, postcss@^8.4.29, postcss@^8.4.31, postcss@^8.4.32, postcss@>=8.0.0:
   version "8.4.32"
   dependencies:
     nanoid "^3.3.7"
@@ -8545,7 +8530,7 @@ react-docgen@^7.0.0:
     resolve "^1.22.1"
     strip-indent "^4.0.0"
 
-react-dom@^18.2.0:
+"react-dom@^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react-dom@^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0", "react-dom@^16 || ^17 || ^18", "react-dom@^16.8 || ^17.0 || ^18.0", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0", "react-dom@^16.x || 17.x || 18.x", react-dom@^18, react-dom@^18.0.0, react-dom@^18.2.0, "react-dom@>= 0.14.0", "react-dom@>= 16.8.0", react-dom@>=16.8, react-dom@>=16.8.0, "react-dom@16.8.0 - 18":
   version "18.2.0"
   dependencies:
     loose-envify "^1.1.0"
@@ -8566,7 +8551,7 @@ react-is@^16.7.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-is@^17.0.1:
+react-is@^17.0.1, "react-is@>= 16.8.0":
   version "17.0.2"
 
 react-is@^18.0.0:
@@ -8634,7 +8619,7 @@ react-textarea-autosize@8.5.3:
     use-composed-ref "^1.3.0"
     use-latest "^1.2.1"
 
-react@^18.2.0:
+"react@^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react@^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0", "react@^15.3.0 || 16 || 17 || 18", "react@^16 || ^17 || ^18", "react@^16.3.0 || ^17.0.1 || ^18.0.0", "react@^16.5.1 || ^17.0.0 || ^18.0.0", "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.x || 17.x || 18.x", react@^18, react@^18.0.0, react@^18.2.0, "react@>= 0.14.0", "react@>= 16", "react@>= 16.8.0", react@>=16, react@>=16.8, react@>=16.8.0, "react@16.8.0 - 18":
   version "18.2.0"
   dependencies:
     loose-envify "^1.1.0"
@@ -8905,7 +8890,7 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-"rollup@^2.25.0 || ^3.3.0", rollup@^3.27.1:
+rollup@^1.20.0||^2.0.0||^3.0.0||^4.0.0, "rollup@^2.25.0 || ^3.3.0", rollup@^3.27.1:
   version "3.29.4"
   optionalDependencies:
     fsevents "~2.3.2"
@@ -9003,10 +8988,10 @@ semver@^6.3.0:
 semver@^6.3.1:
   version "6.3.1"
 
-semver@^7.3.4, semver@^7.3.7, semver@^7.3.8, semver@^7.5.3, semver@^7.5.4:
-  version "7.5.4"
-  dependencies:
-    lru-cache "^6.0.0"
+semver@^7.3.4, semver@^7.3.7, semver@^7.3.8, semver@^7.5.3, semver@^7.5.4, semver@^7.6.0:
+  version "7.6.2"
+  resolved "https://registry.npmjs.org/semver/-/semver-7.6.2.tgz"
+  integrity sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==
 
 "semver@2 || 3 || 4 || 5":
   version "5.7.2"
@@ -9412,7 +9397,7 @@ styled-components@^5.3.6:
     shallowequal "^1.1.0"
     supports-color "^5.5.0"
 
-styled-components@^6.1.1:
+styled-components@^6.1.1, "styled-components@>= 2":
   version "6.1.1"
   dependencies:
     "@emotion/is-prop-valid" "^1.2.1"
@@ -9455,7 +9440,7 @@ stylelint-scss@^5.3.0:
     postcss-selector-parser "^6.0.13"
     postcss-value-parser "^4.2.0"
 
-stylelint@^15.11.0:
+"stylelint@^14.5.1 || ^15.0.0", stylelint@^15.10.0, stylelint@^15.11.0:
   version "15.11.0"
   dependencies:
     "@csstools/css-parser-algorithms" "^2.3.1"
@@ -9502,7 +9487,7 @@ stylelint@^15.11.0:
 stylis@^4.3.0:
   version "4.3.0"
 
-sugarss@^4.0.1:
+sugarss@*, sugarss@^4.0.1:
   version "4.0.1"
 
 superstruct@^1.0.3:
@@ -9555,8 +9540,10 @@ system-architecture@^0.1.0:
   resolved "https://registry.npmjs.org/system-architecture/-/system-architecture-0.1.0.tgz"
   integrity sha512-ulAk51I9UVUyJgxlv9M6lFot2WP3e7t8Kz9+IS6D4rVba1tR9kON+Ey69f+1R4Q8cd45Lod6a4IcJIxnzGc/zA==
 
-tabbable@^6.0.1:
+tabbable@^6.0.0:
   version "6.2.0"
+  resolved "https://registry.npmjs.org/tabbable/-/tabbable-6.2.0.tgz"
+  integrity sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==
 
 table@^6.8.1:
   version "6.8.1"
@@ -9792,8 +9779,10 @@ type-fest@^1.0.1, type-fest@^1.2.1, type-fest@^1.2.2:
 type-fest@^2.19.0:
   version "2.19.0"
 
-type-fest@^3.13.1:
-  version "3.13.1"
+type-fest@^4.12.0:
+  version "4.18.3"
+  resolved "https://registry.npmjs.org/type-fest/-/type-fest-4.18.3.tgz"
+  integrity sha512-Q08/0IrpvM+NMY9PA2rti9Jb+JejTddwmwmVQGskAlhtcrw1wsRzoR6ode6mR+OAabNa75w/dxedSUY2mlphaQ==
 
 type-fest@~2.19:
   version "2.19.0"
@@ -9850,7 +9839,7 @@ typedarray-to-buffer@^3.1.5:
 typedarray@^0.0.6:
   version "0.0.6"
 
-typescript@^5.1, typescript@^5.3.3:
+typescript@*, "typescript@^4.3.5 || ^5.0.0", typescript@^5.3.3, "typescript@>= 4.3.x", typescript@>=4.2.0, typescript@>=4.9.5, typescript@>=5.0.4:
   version "5.3.3"
 
 ua-parser-js@^1.0.33:
@@ -10059,7 +10048,7 @@ userop@^0.4.0-beta.5:
     ethers "^6.11.1"
     viem "^2.9.12"
 
-utf-8-validate@^5.0.2:
+utf-8-validate@^5.0.2, utf-8-validate@>=5.0.2:
   version "5.0.10"
   resolved "https://registry.npmjs.org/utf-8-validate/-/utf-8-validate-5.0.10.tgz"
   integrity sha512-Z6czzLq4u8fPOyx7TU6X3dvUZVvoJmxSQ+IcrlmagKhilxlhZgxPK6C5Jqbkw1IDUmFTM+cz9QDnnLTwDz/2gQ==
@@ -10120,7 +10109,7 @@ viem@^1.0.0:
     isows "1.0.3"
     ws "8.13.0"
 
-viem@^2.9.12, viem@^2.9.25:
+viem@^2.9.12, viem@^2.9.17, viem@^2.9.25:
   version "2.9.25"
   resolved "https://registry.npmjs.org/viem/-/viem-2.9.25.tgz"
   integrity sha512-W0QOXCsYQppnV89PQP0EnCvfZIEsDYqmpVakLPNrok4Q4B7651M3MV/sYifYcLWv3Mn4KUyMCUlVxlej6CfC/w==
@@ -10164,6 +10153,15 @@ vite-tsconfig-paths@^4.2.1:
     globrex "^0.1.2"
     tsconfck "^2.1.0"
 
+vite@*, "vite@^2.0.0 || ^3.0.0 || ^4.0.0", "vite@^3.0.0 || ^4.0.0 || ^5.0.0", vite@^4.1.0-beta.0, "vite@^4.2.0 || ^5.0.0", vite@^4.5.0:
+  version "4.5.1"
+  dependencies:
+    esbuild "^0.18.10"
+    postcss "^8.4.27"
+    rollup "^3.27.1"
+  optionalDependencies:
+    fsevents "~2.3.2"
+
 "vite@^3.0.0 || ^4.0.0 || ^5.0.0-0":
   version "5.0.7"
   dependencies:
@@ -10182,16 +10180,7 @@ vite-tsconfig-paths@^4.2.1:
   optionalDependencies:
     fsevents "~2.3.3"
 
-vite@^4.5.0:
-  version "4.5.1"
-  dependencies:
-    esbuild "^0.18.10"
-    postcss "^8.4.27"
-    rollup "^3.27.1"
-  optionalDependencies:
-    fsevents "~2.3.2"
-
-vitest@^0.34.6:
+vitest@^0.34.6, "vitest@>= 0.32":
   version "0.34.6"
   dependencies:
     "@types/chai" "^4.3.5"
@@ -10521,6 +10510,11 @@ write-file-atomic@^5.0.1:
     imurmurhash "^0.1.4"
     signal-exit "^4.0.1"
 
+ws@*, ws@^8.13.0, ws@8.13.0:
+  version "8.13.0"
+  resolved "https://registry.npmjs.org/ws/-/ws-8.13.0.tgz"
+  integrity sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==
+
 ws@^6.1.0:
   version "6.2.2"
   dependencies:
@@ -10530,11 +10524,6 @@ ws@^7.5.1:
   version "7.5.9"
   resolved "https://registry.npmjs.org/ws/-/ws-7.5.9.tgz"
   integrity sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==
-
-ws@^8.13.0, ws@8.13.0:
-  version "8.13.0"
-  resolved "https://registry.npmjs.org/ws/-/ws-8.13.0.tgz"
-  integrity sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==
 
 ws@^8.2.3:
   version "8.14.2"

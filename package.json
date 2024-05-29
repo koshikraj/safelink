@@ -1,11 +1,11 @@
 {
-  "name": "safe-subs",
+  "name": "safelink",
   "version": "1.0.0",
   "description": "A monorepo for subaccount module and app",
   "main": "dist/index.js",
   "workspaces": [
     "packages/*",
-    "webauthn"
+    "module"
   ],
   "scripts": {
     "fmt:global": "prettier --write .",
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/koshikraj/safe-passkey-validator.git"
+    "url": "git+https://github.com/koshikraj/safelink.git"
   },
   "author": "koshikraj",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/koshikraj/safe-passkey-validator/issues"
+    "url": "https://github.com/koshikraj/safelink/issues"
   },
-  "homepage": "https://github.com/koshikraj/safe-passkey-validator/#readme",
+  "homepage": "https://github.com/koshikraj/safelink/#readme",
   "keywords": [
     "Ethereum",
     "7579",
