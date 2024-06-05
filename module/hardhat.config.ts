@@ -91,6 +91,10 @@ const userConfig: HardhatUserConfig = {
       ...sharedNetworkConfig,
       url: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
     },
+    base: {
+      ...sharedNetworkConfig,
+      url: `https://base-mainnet.g.alchemy.com/v2/NTGkSXMuKkoHwQ_W4eNpGlihUScplXYV`,
+    },
     gnosis: {
       ...sharedNetworkConfig,
       url: 'https://rpc.gnosis.gateway.fm',

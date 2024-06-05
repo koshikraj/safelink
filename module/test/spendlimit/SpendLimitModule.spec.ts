@@ -8,6 +8,8 @@ import {
 import execSafeTransaction from '../utils/execSafeTransaction';
 import { ZeroAddress } from 'ethers';
 import { Hex, pad } from 'viem'
+import { token } from '../../typechain-types/@openzeppelin/contracts'
+import { getBalance } from 'viem/_types/actions/public/getBalance'
 
 
 describe('Spendlimit session key - Basic tests', () => {
@@ -37,29 +39,29 @@ describe('Spendlimit session key - Basic tests', () => {
 
 
     it('should add a spendlimit validator and execute ops with signatures', async () => {
-      const { user1, user2, safe, spendLimitModule, safe7579, entryPoint, relayer } = await setupTests()
+      const { user1, safe, spendLimitModule, safe7579, entryPoint, relayer } = await setupTests()
 
       await entryPoint.depositTo(await safe.getAddress(), { value: ethers.parseEther('1.0') })
 
       await user1.sendTransaction({ to: await safe.getAddress(), value: ethers.parseEther('1') })
 
       const abi = [
-        'function execute(address sessionKey, address to, uint256 value, bytes calldata data) external',
+        'function execute(address sessionKey, uint256 sessionId, address to, uint256 value, bytes calldata data) external',
       ]
 
-      const execCallData = new ethers.Interface(abi).encodeFunctionData('execute', [user1.address, user1.address, ethers.parseEther('1'), '0x' as Hex])
+      const execCallData = new ethers.Interface(abi).encodeFunctionData('execute', [user1.address, 0, user1.address, ethers.parseEther('1'), '0x' as Hex])
 
       const newCall = {target: await spendLimitModule.getAddress() as Hex, value: 0, callData: execCallData as Hex}
      
       const currentTime = Math.floor(Date.now()/1000)
-      const sessionData = {account: await safe.getAddress(), validAfter: 0, validUntil: currentTime + 30, limitAmount: ethers.parseEther('1'), limitUsed: 0, lastUsed: 0, refreshInterval: 0 }
+      const sessionData = {account: await safe.getAddress(), token: ZeroAddress, validAfter: 0, validUntil: currentTime + 30, limitAmount: ethers.parseEther('1'), limitUsed: 0, lastUsed: 0, refreshInterval: 0 }
 
 
       await execSafeTransaction(safe, await safe7579.initializeAccount.populateTransaction([], [], [], [], {registry: ZeroAddress, attesters: [], threshold: 0}));
 
       await execSafeTransaction(safe, {to: await safe.getAddress(), data:  ((await safe7579.installModule.populateTransaction(1, await spendLimitModule.getAddress(), '0x')).data as string), value: 0})
       await execSafeTransaction(safe, {to: await safe.getAddress(), data:  ((await safe7579.installModule.populateTransaction(2, await spendLimitModule.getAddress(), '0x')).data as string), value: 0})
-      await execSafeTransaction(safe, await spendLimitModule.addSessionKey.populateTransaction(user1.address, ZeroAddress, sessionData))
+      await execSafeTransaction(safe, await spendLimitModule.addSessionKey.populateTransaction(user1.address, sessionData))
       
 
       const key = BigInt(pad(await spendLimitModule.getAddress() as Hex, {
@@ -82,6 +84,56 @@ describe('Spendlimit session key - Basic tests', () => {
     })
 
 
+    it('should add a spendlimit validator and execute ops with signatures for a token', async () => {
+      const { user1, user2, testToken, safe, spendLimitModule, safe7579, entryPoint, relayer } = await setupTests()
+
+      await entryPoint.depositTo(await safe.getAddress(), { value: ethers.parseEther('1.0') })
+
+      await testToken.transfer(await safe.getAddress(), ethers.parseEther('5') )
+
+      const abi = [
+        'function execute(address sessionKey, uint256 sessionId, address to, uint256 value, bytes calldata data) external',
+      ]
+
+      const ERC20_ABI = [
+        'function transfer(address to, uint256 amount) external'      ]
+
+      const callDataa = new ethers.Interface(ERC20_ABI).encodeFunctionData('transfer', [user2.address, ethers.parseEther('5')])
+
+      const execCallData = new ethers.Interface(abi).encodeFunctionData('execute', [user1.address, 0, await testToken.getAddress(), 0, callDataa])
+
+      const newCall = {target: await spendLimitModule.getAddress() as Hex, value: 0, callData: execCallData as Hex}
+     
+      const currentTime = Math.floor(Date.now()/1000)
+      const sessionData = {account: await safe.getAddress(), token: await testToken.getAddress(), validAfter: 0, validUntil: currentTime + 30, limitAmount: ethers.parseEther('5'), limitUsed: 0, lastUsed: 0, refreshInterval: 0 }
+
+      await execSafeTransaction(safe, await safe7579.initializeAccount.populateTransaction([], [], [], [], {registry: ZeroAddress, attesters: [], threshold: 0}));
+
+      await execSafeTransaction(safe, {to: await safe.getAddress(), data:  ((await safe7579.installModule.populateTransaction(1, await spendLimitModule.getAddress(), '0x')).data as string), value: 0})
+      await execSafeTransaction(safe, {to: await safe.getAddress(), data:  ((await safe7579.installModule.populateTransaction(2, await spendLimitModule.getAddress(), '0x')).data as string), value: 0})
+      await execSafeTransaction(safe, await spendLimitModule.addSessionKey.populateTransaction(user1.address, sessionData))
+
+      const key = BigInt(pad(await spendLimitModule.getAddress() as Hex, {
+          dir: "right",
+          size: 24,
+        }) || 0
+      )
+      const currentNonce = await entryPoint.getNonce(await safe.getAddress(), key);
+
+
+      let userOp = buildUnsignedUserOpTransaction(await safe.getAddress(), currentNonce, newCall)
+
+      const typedDataHash = ethers.getBytes(await entryPoint.getUserOpHash(userOp))
+      userOp.signature = await user1.signMessage(typedDataHash)
+      
+      await logGas('Execute UserOp without a prefund payment', entryPoint.handleOps([userOp], relayer))
+
+      expect(await testToken.balanceOf(await safe.getAddress())).to.be.eq(ethers.parseEther('0'))
+
+
+    })
+
+
 
     it('should execute multiple session key transaction within limit and time interval', async () => {
       const { user1, user2, safe, spendLimitModule, safe7579, entryPoint, relayer } = await setupTests()
@@ -91,24 +143,24 @@ describe('Spendlimit session key - Basic tests', () => {
       await user1.sendTransaction({ to: await safe.getAddress(), value: ethers.parseEther('1') })
 
       const abi = [
-        'function execute(address sessionKey, address to, uint256 value, bytes calldata data) external',
+        'function execute(address sessionKey, uint256 sessionId, address to, uint256 value, bytes calldata data) external',
       ]
 
-      const execCallData = new ethers.Interface(abi).encodeFunctionData('execute', [user1.address, user1.address, ethers.parseEther('0.5'), '0x' as Hex])
+      const execCallData = new ethers.Interface(abi).encodeFunctionData('execute', [user1.address, 0, user1.address, ethers.parseEther('0.5'), '0x' as Hex])
 
       const newCall = {target: await spendLimitModule.getAddress() as Hex, value: 0, callData: execCallData as Hex}
      
       const currentTime = Math.floor(Date.now()/1000)
-      const sessionData = {account: await safe.getAddress(), validAfter: currentTime, validUntil: currentTime + 30, limitAmount: ethers.parseEther('1'), limitUsed: 0, lastUsed: 0, refreshInterval: 0 }
+      const sessionData = {account: await safe.getAddress(), token: ZeroAddress, validAfter: currentTime, validUntil: currentTime + 30, limitAmount: ethers.parseEther('1'), limitUsed: 0, lastUsed: 0, refreshInterval: 0 }
 
 
       await execSafeTransaction(safe, await safe7579.initializeAccount.populateTransaction([], [], [], [], {registry: ZeroAddress, attesters: [], threshold: 0}));
 
       await execSafeTransaction(safe, {to: await safe.getAddress(), data:  ((await safe7579.installModule.populateTransaction(1, await spendLimitModule.getAddress(), '0x')).data as string), value: 0})
       await execSafeTransaction(safe, {to: await safe.getAddress(), data:  ((await safe7579.installModule.populateTransaction(2, await spendLimitModule.getAddress(), '0x')).data as string), value: 0})
-       await execSafeTransaction(safe, await spendLimitModule.addSessionKey.populateTransaction(user1.address, ZeroAddress, sessionData))
+      await execSafeTransaction(safe, await spendLimitModule.addSessionKey.populateTransaction(user1.address, sessionData))
       
-
+      
       const key = BigInt(pad(await spendLimitModule.getAddress() as Hex, {
           dir: "right",
           size: 24,
@@ -146,22 +198,22 @@ describe('Spendlimit session key - Basic tests', () => {
       await user1.sendTransaction({ to: await safe.getAddress(), value: ethers.parseEther('1') })
 
       const abi = [
-        'function execute(address sessionKey, address to, uint256 value, bytes calldata data) external',
+        'function execute(address sessionKey, uint256 sessionId, address to, uint256 value, bytes calldata data) external',
       ]
 
-      const execCallData = new ethers.Interface(abi).encodeFunctionData('execute', [user1.address, user1.address, ethers.parseEther('0.5'), '0x' as Hex])
+      const execCallData = new ethers.Interface(abi).encodeFunctionData('execute', [user1.address, 0, user1.address, ethers.parseEther('0.5'), '0x' as Hex])
 
       const newCall = {target: await spendLimitModule.getAddress() as Hex, value: 0, callData: execCallData as Hex}
      
       const currentTime = Math.floor(Date.now()/1000)
-      const sessionData = {account: await safe.getAddress(), validAfter: currentTime, validUntil: currentTime + 30, limitAmount: ethers.parseEther('0.5'), limitUsed: 0, lastUsed: 0, refreshInterval: 5 }
+      const sessionData = {account: await safe.getAddress(), token: ZeroAddress,  validAfter: currentTime, validUntil: currentTime + 30, limitAmount: ethers.parseEther('0.5'), limitUsed: 0, lastUsed: 0, refreshInterval: 5 }
 
 
       await execSafeTransaction(safe, await safe7579.initializeAccount.populateTransaction([], [], [], [], {registry: ZeroAddress, attesters: [], threshold: 0}));
 
       await execSafeTransaction(safe, {to: await safe.getAddress(), data:  ((await safe7579.installModule.populateTransaction(1, await spendLimitModule.getAddress(), '0x')).data as string), value: 0})
       await execSafeTransaction(safe, {to: await safe.getAddress(), data:  ((await safe7579.installModule.populateTransaction(2, await spendLimitModule.getAddress(), '0x')).data as string), value: 0})
-       await execSafeTransaction(safe, await spendLimitModule.addSessionKey.populateTransaction(user1.address, ZeroAddress, sessionData))
+       await execSafeTransaction(safe, await spendLimitModule.addSessionKey.populateTransaction(user1.address, sessionData))
       
 
       const key = BigInt(pad(await spendLimitModule.getAddress() as Hex, {

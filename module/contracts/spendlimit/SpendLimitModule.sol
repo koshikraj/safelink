@@ -16,11 +16,11 @@ contract SpendLimitModule is ERC7579ValidatorBase, ERC7579ExecutorBase {
     using SignatureCheckerLib for address;
     using ExecutionLib for bytes;
 
-    // SessionKey -> token -> SessionData
-    mapping(address => mapping(address => SessionData)) public sessionKeys;
+    mapping(address =>  SessionData[]) public sessionKeys;
 
     struct SessionData {
 
+        address token;
         address account;
         uint48 validAfter;
         uint48 validUntil;
@@ -93,11 +93,15 @@ contract SpendLimitModule is ERC7579ValidatorBase, ERC7579ExecutorBase {
      * @dev Adds a session key to the mapping.
      */
     // Add a session key to the mapping
-    function addSessionKey(address sessionKey, address token, SessionData calldata sessionData) public  {
+    function addSessionKey(address sessionKey, SessionData memory sessionData) public  returns (uint256) {
 
-        sessionKeys[sessionKey][token] =  sessionData; 
-        sessionKeys[sessionKey][token].account =  msg.sender; 
+        // sessionKeys[sessionKey][token] =  sessionData; 
+        // sessionKeys[sessionKey][token].account =  msg.sender; 
+        sessionData.account = msg.sender; 
+        sessionKeys[sessionKey].push(sessionData);
         emit SessionKeyAdded(sessionKey, msg.sender);
+
+        return sessionKeys[sessionKey].length - 1;
 
     }
 
@@ -110,17 +114,16 @@ contract SpendLimitModule is ERC7579ValidatorBase, ERC7579ExecutorBase {
      * @param data The data to include with the transaction.
      * @return The result of the transaction execution.
      */
-    function execute(address sessionKey, address to, uint256 value, bytes calldata data) public returns (bytes memory) {
+    function execute(address sessionKey, uint256 sessionId, address to, uint256 value, bytes calldata data) public returns (bytes memory) {
 
             address token = value == 0 ? to : address(0);
-            uint256 value = value == 0 ? _getTokenSpendAmount(data) : value;
 
+            uint256 tokenValue = value == 0 ? _getTokenSpendAmount(data) : value;
 
-            if(!updateSpendLimitUsage(value, sessionKey, token))  {
+            if(!updateSpendLimitUsage(tokenValue, sessionKey, sessionId, token))  {
             revert ExecutionFailed();
             }
 
-            SessionData memory sessionData = sessionKeys[sessionKey][token];
             return _execute(msg.sender, to, value, data);
 
 
@@ -152,12 +155,16 @@ contract SpendLimitModule is ERC7579ValidatorBase, ERC7579ExecutorBase {
     function updateSpendLimitUsage(
         uint256 newUsage,
         address sessionKey,
+        uint256 sessionId,
         address token
     ) internal returns (bool) {
 
 
-            SessionData storage sessionData = sessionKeys[sessionKey][token];
-            
+            SessionData storage sessionData = sessionKeys[sessionKey][sessionId];
+
+        if(token != sessionData.token) {
+            return false;
+        }
 
             uint48 refreshInterval =  sessionData.refreshInterval;
             uint48 lastUsed = sessionData.lastUsed;
@@ -200,6 +207,12 @@ contract SpendLimitModule is ERC7579ValidatorBase, ERC7579ExecutorBase {
         }
 
         return true;
+    }
+
+
+    // Function to get the array of SessionData for a specific address
+    function getSessionData(address sessionKey) public view returns (SessionData[] memory) {
+        return sessionKeys[sessionKey];
     }
 
 
