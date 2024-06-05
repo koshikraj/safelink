@@ -71,7 +71,7 @@ function HomePage() {
   const [network, setNetwork] = useState('');
   const [sessionCreated, setSessionCreated] = useState(false);
   const [sessionKey, setSessionKey] = useState('');
-  const [sharableLink, setSharableLink] = useState('dasd');
+  const [sharableLink, setSharableLink] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [safeError, setSafeError] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -340,7 +340,7 @@ function HomePage() {
 
               <p className={classes.subheading} style={{ textAlign: 'center' }}>
                 
-               This link account is like a magic wand. Check out the magic of this link <Anchor target='_blank' href={`/#/account?key=${sessionKey}&chainId=${chainId}`} >here </Anchor> ❤️ ❤️
+               This link account is like a magic wand. Check out the magic of this link <Anchor target='_blank' href={sharableLink} >here </Anchor> ❤️ ❤️
               </p>
 
 

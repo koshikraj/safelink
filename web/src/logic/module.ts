@@ -1,14 +1,13 @@
-import { Contract, Interface, ZeroAddress, getBytes, parseEther} from "ethers";
+import { Contract, Interface, ZeroAddress, getBytes, parseEther, parseUnits} from "ethers";
 import { ethers, utils } from 'ethersv5';   
 import { BaseTransaction } from '@safe-global/safe-apps-sdk';
 import { getSafeInfo, isConnectedToSafe, submitTxs } from "./safeapp";
-import { isModuleEnabled, buildEnableModule, buildUpdateFallbackHandler } from "./safe";
+import { isModuleEnabled, buildEnableModule, buildUpdateFallbackHandler, isModuleInstalled } from "./safe";
 import { getJsonRpcProvider, getProvider } from "./web3";
 import Safe7579 from "./Safe7579.json"
-import SpendLimitSession from "./SpendLimitSession.json"
-import WebAuthnValidator from "./WebAuthnValidator.json"
+import SpendLimitModule from "./SpendLimitModule.json"
 import EntryPoint from "./EntryPoint.json"
-import {  publicClient } from "./utils";
+import {  getTokenDecimals, publicClient } from "./utils";
 import {  buildUnsignedUserOpTransaction } from "@/utils/userOp";
 import { createClient, http, Chain, Hex, pad} from "viem";
 import { bundlerActions, ENTRYPOINT_ADDRESS_V07, UserOperation, getAccountNonce, getPackedUserOperation } from 'permissionless'
@@ -18,22 +17,24 @@ import {  sendUserOperation } from "./permissionless";
 
 // const safe7579Module = "0xbaCA6f74a5549368568f387FD989C279f940f1A5"
 const safe7579Module = "0x94952C0Ea317E9b8Bca613490AF25f6185623284"
-const spendLimitModule = "0x396C9a7f004412f251B228fd4Fb63F243793b509"
+const spendLimitModule = "0x6b29160491Ce38Aba4716b6018F372Ffe6d31eB0"
 
 
-export const getSessionData = async (chainId: string, sessionKey: string, token: string): Promise<any> => {
+export const getSessionData = async (chainId: string, sessionKey: string): Promise<any> => {
 
 
     const bProvider = await getJsonRpcProvider(chainId)
 
     const spendLimit = new Contract(
         spendLimitModule,
-        SpendLimitSession.abi,
+        SpendLimitModule.abi,
         bProvider
     )
 
 
-    const sesionData = await spendLimit.sessionKeys(sessionKey, token);
+    const sesionData = await spendLimit.sessionKeys(sessionKey, 0);
+
+    console.log(sesionData)
 
 
     return sesionData;
@@ -69,16 +70,16 @@ export function generateKeysFromString(string: string) {
 
 
 
-export const sendTransaction = async (chainId: string, recipient: string, amount: bigint, walletProvider: any, safeAccount: string): Promise<any> => {
+export const sendTransaction = async (chainId: string, recipient: string, amount: bigint, data: any, walletProvider: any, safeAccount: string): Promise<any> => {
 
-    const bProvider = await getJsonRpcProvider(chainId)
 
+    
 
     const abi = [
-        'function execute(address sessionKey, address to, uint256 value, bytes calldata data) external',
+        'function execute(address sessionKey, uint256 sessionId, address to, uint256 value, bytes calldata data) external',
       ]
 
-    const execCallData = new Interface(abi).encodeFunctionData('execute', [walletProvider.address, recipient, amount, '0x' as Hex])
+    const execCallData = new Interface(abi).encodeFunctionData('execute', [walletProvider.address, 0, recipient, amount, data])
 
     const call = { target: spendLimitModule as Hex, value: 0, callData: execCallData as Hex }
 
@@ -147,7 +148,6 @@ const buildInitSafe7579 = async ( ): Promise<BaseTransaction> => {
 
 
 
-
 const buildInstallValidator = async (): Promise<BaseTransaction> => {
 
     
@@ -204,24 +204,25 @@ const buildAddSessionKey = async (sessionKey: string, token: string, amount: str
 
     
     const info = await getSafeInfo()
-
-    const sessionData = {account: info.safeAddress, validAfter: validAfter, validUntil: validUntil, limitAmount: parseEther(amount), limitUsed: 0, lastUsed: 0, refreshInterval: refreshInterval }
-
     const provider = await getProvider()
+
+    const sessionData = {account: info.safeAddress, token: token, validAfter: validAfter, validUntil: validUntil, limitAmount: parseUnits(amount, token!= ZeroAddress ? await getTokenDecimals(token, provider) : 'ether'), limitUsed: 0, lastUsed: 0, refreshInterval: refreshInterval }
+
+
     // Updating the provider RPC if it's from the Safe App.
     const chainId = (await provider.getNetwork()).chainId.toString()
     const bProvider = await getJsonRpcProvider(chainId)
 
     const spendLimit = new Contract(
         spendLimitModule,
-        SpendLimitSession.abi,
+        SpendLimitModule.abi,
         bProvider
     )
 
     return {
         to: spendLimitModule,
         value: "0",
-        data: (await spendLimit.addSessionKey.populateTransaction(sessionKey, token, sessionData)).data
+        data: (await spendLimit.addSessionKey.populateTransaction(sessionKey, sessionData)).data
     }
 }
 
@@ -242,14 +243,21 @@ export const createSessionKey = async (token: string, amount: string, refreshInt
 
     const { address, privateKey } = generateKeysFromString(randomSeed);
 
+
     if (!await isModuleEnabled(info.safeAddress, safe7579Module)) {
         txs.push(await buildEnableModule(info.safeAddress, safe7579Module))
         txs.push(await buildUpdateFallbackHandler(info.safeAddress, safe7579Module))
         txs.push(await buildInitSafe7579())
-
         txs.push(await buildInstallValidator())
         txs.push(await buildInstallExecutor())
+
     }
+    else if (!await isModuleInstalled(info.safeAddress, spendLimitModule, 1)) {
+    txs.push(await buildInstallValidator())
+    txs.push(await buildInstallExecutor())
+
+    }
+
 
 
 

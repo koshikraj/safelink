@@ -4,6 +4,8 @@ import ETH from '../assets/icons/eth.svg';
 import Gnosis from '../assets/icons/gno.svg';
 import Matic from '../assets/icons/matic.svg';
 import USDT from '../assets/icons/usdt.svg';
+import EURe from '../assets/icons/eure.svg';
+import USDe from '../assets/icons/usde.svg';
 
 
 export const badgeIcons = [
@@ -36,7 +38,19 @@ export const tokenList: any = {
         label: 'ETH',
         image: ETH,
         description: 'Ether currency',
-      },                                                                                                    
+      },     
+      {
+        value: '0xd58C5Db52B5B3Eb24EE38AF287d2cb0F424172A5',
+        label: 'EURe',
+        image: EURe,
+        description: 'Monerium EUR emoney',
+      },   
+      {
+        value: '0x8bA8662a7C5C6Be4B4ad7049c5DbF59aaCC2cf1e',
+        label: 'USDe',
+        image: USDe,
+        description: 'Monerium USD emoney',
+      },                                                                                                                                                                                                                                                                                                    
 
   ],
   84532: [
@@ -46,6 +60,22 @@ export const tokenList: any = {
         image: ETH,
         description: 'Ether currency',
       },                                                                                                    
+
+  ],
+
+  8453: [
+    {
+        value: '0x0000000000000000000000000000000000000000',
+        label: 'ETH',
+        image: ETH,
+        description: 'Ether currency',
+      },   
+      {
+        value: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+        label: 'USDC',
+        image: USDe,
+        description: 'Circle USDS token',
+      },                                                                                                   
 
   ],
 

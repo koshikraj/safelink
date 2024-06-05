@@ -2,8 +2,8 @@ import { Text, ActionIcon, Alert, Anchor, Avatar, Badge, Button, CopyButton, Div
 import classes from './claim.module.css';
 import { useEffect, useState } from 'react';
 import useLinkStore from '@/store/account/account.store';
-import { formatEther, parseEther, parseUnits, ZeroAddress } from 'ethers';
-import { buildTransferToken, fixDecimal, formatTime, getTokenBalance, getTokenDecimals, passkeyHttpClient, publicClient } from '@/logic/utils';
+import { formatEther, formatUnits, parseEther, parseUnits, ZeroAddress } from 'ethers';
+import { buildTransferToken, fixDecimal, formatTime, getTokenBalance, getTokenDecimals } from '@/logic/utils';
 import { useDisclosure } from '@mantine/hooks';
 import {  IconBug, IconCheck, IconChevronDown, IconClock, IconCoin, IconConfetti, IconCopy, IconCross, IconDownload, IconError404, IconGif, IconGift, IconHomeDown, IconSend, IconShieldCheck, IconTransferOut, IconUserCheck } from '@tabler/icons';
 import { NetworkUtil } from '@/logic/networks';
@@ -17,7 +17,6 @@ import { loadAccountInfo, storeAccountInfo } from '@/utils/storage';
 
 import Passkey from '../../assets/icons/passkey.svg';
 import { useSearchParams } from 'react-router-dom';
-import { addWebAuthnData, create, getWebAuthnData, getWebAuthnDataByAccount, login } from '@/logic/passkey';
 import { get } from 'http';
 import { waitForExecution } from '@/logic/permissionless';
 import { ethers } from 'ethersv5';
@@ -43,7 +42,7 @@ export const ClaimPage = () => {
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
   const [value, setValue] = useState<string>("0x0000000000000000000000000000000000000000");
   const [walletProvider, setWalletProvider] = useState<any>();
-  const [sessionLoading, setSessionLoading] = useState(false);
+  const [sessionLoading, setSessionLoading] = useState(true);
   const [sessionKeyActive, setSessionKeyActive] = useState(false);
   const [availableAmount, setAvailableAmount] = useState(''); 
   const [safeAccount, setSafeAccount] = useState('');
@@ -51,7 +50,6 @@ export const ClaimPage = () => {
   const [validAfter, setValidAfter] = useState(0);
   const [linkLoading, setLinkLoading] = useState(true);
   const [error, setError ] = useState('');
-  const [onboardingStep, setOnboardingStep] = useState(0);
   const [queryParams, setQueryParams] = useState<any>({key: '', chainId: ''});
 
 
@@ -183,19 +181,20 @@ export const ClaimPage = () => {
         } else {
           const provider = await getJsonRpcProvider(chainId.toString())
             parseAmount = parseUnits(tokenValue.toString(), await  getTokenDecimals(value, provider))
+            console.log(parseAmount)
             data = await buildTransferToken(value, toAddress, parseAmount, provider)
             parseAmount = 0n;
             toAddress = value;
         }
         
-    const result = await sendTransaction(chainId.toString(), toAddress, parseAmount, walletProvider, safeAccount)
+    const result = await sendTransaction(chainId.toString(), toAddress, parseAmount, data, walletProvider, safeAccount)
     if (!result)
     setSendSuccess(false);
     else {
-    setSendSuccess(true);
     setSendModal(false);
     setConfirming(true);
     await waitForExecution(chainId, result);
+    setSendSuccess(true);
     setConfirming(false);
     }
   } catch(e) {
@@ -209,9 +208,10 @@ export const ClaimPage = () => {
 
   async function fetchSessionData(sessionKey: string, chainId: string) {
 
-    
+    const provider = await getJsonRpcProvider(chainId.toString())
     setSessionLoading(true);
-    const {validAfter, validUntil, limitAmount, limitUsed, account} = await getSessionData(chainId, sessionKey, ZeroAddress);
+
+    const {validAfter, validUntil, limitAmount, limitUsed, account, token} = await getSessionData(chainId, sessionKey);
 
     const currentTime = Date.now();
     const availableLimit =  limitAmount - limitUsed;
@@ -219,10 +219,11 @@ export const ClaimPage = () => {
     setValidAfter(parseInt(validAfter));
     setValidTill(parseInt(validUntil));
     setSessionKeyActive(currentTime < parseInt(validUntil)*1000 && currentTime > parseInt(validAfter)*1000);
-    setAvailableAmount(formatEther(availableLimit));
-    setTokenValue(formatEther(availableLimit));
+    setAvailableAmount(formatUnits(availableLimit, token == ZeroAddress ? 'ether' : await getTokenDecimals(token, provider)));
+    formatUnits
     setSessionLoading(false);
     setSafeAccount(account);
+    setValue(token);
 
   }
 
@@ -252,11 +253,11 @@ export const ClaimPage = () => {
   return (
     <>
 
-<Modal opened={sendModal} onClose={()=>{ setSendModal(false); setSendSuccess(false); setValue(ZeroAddress);}} title="Transfer your crypto" centered>
+<Modal opened={sendModal} onClose={()=>{ setSendModal(false); setSendSuccess(false); }} title="Transfer your crypto" centered>
 
 <div className={classes.formContainer}>
       <div>
-        <h1 className={classes.heading}>Send crypto anywhere</h1>
+        <h1 className={classes.heading}>Claim your crypto </h1>
       </div>
       <p className={classes.subHeading}>
         Send your crypto gas free.
@@ -282,10 +283,10 @@ export const ClaimPage = () => {
                           <InputBase
                           style={{width: '50%'}}
                             component="button"
-                            type="button"
-                            pointer
+                            // type="button"
+                            // pointer
                             rightSection={<Combobox.Chevron />}
-                            onClick={() => tokenCombobox.toggleDropdown()}
+                            // onClick={() => tokenCombobox.toggleDropdown()}
                             rightSectionPointerEvents="none"
                             multiline
                           >
@@ -343,7 +344,7 @@ export const ClaimPage = () => {
               loaderProps={{ color: 'white', type: 'dots', size: 'md' }}
               loading={sendLoader}
             >
-              Send Now
+              Claim Now
             </Button>
 
 
@@ -365,13 +366,50 @@ export const ClaimPage = () => {
       
       <div className={classes.formContainer}>
 
-      { linkLoading ? <><Skeleton style={{marginBottom: '10px'}} height={20} width={200} mt={6} radius="xl" /> 
+      { sessionLoading ? <><Skeleton style={{marginBottom: '10px'}} height={20} width={200} mt={6} radius="xl" /> 
           <Skeleton style={{marginBottom: '20px'}} height={20} width={200} mt={6} radius="xl" /> 
           <Skeleton style={{marginBottom: '20px'}} height={40} width={150} mt={6} radius="md" />
           </>
           :
              <>
-            { parseFloat(availableAmount) && sessionKeyActive ? 
+
+             { sendSuccess &&
+
+                  <div>
+                  <h1 className={classes.claimHeading}>
+                    You have claimed
+                    <h1 className={classes.claimInner}>
+                    { tokenValue + " " }
+
+                    {getTokenInfo(chainId, value)?.label}  <Avatar src={getTokenInfo(chainId, value)?.image} ></Avatar>
+                    
+
+                    </h1>
+
+                  </h1>
+                  <h1 className={classes.links}>   🎉 😍
+                  </h1>
+
+                
+
+                  {Boolean(parseFloat(availableAmount)) && <>
+     
+                  <h1 className={classes.claimHeading}>
+                  You have  {availableAmount ? availableAmount : 0}{' ' + getTokenInfo(chainId, value)?.label} 
+
+                  </h1>
+                  <h1 className={classes.links}> more to claim 
+                  </h1>
+                  </> 
+                  }
+    
+                  </div>
+
+
+             }
+            { !sendSuccess && 
+            
+           <> { parseFloat(availableAmount) && sessionKeyActive ? 
             
             <div>
             <h1 className={classes.claimHeading}>
@@ -379,7 +417,7 @@ export const ClaimPage = () => {
               <h1 className={classes.claimInner}>
               {availableAmount ? availableAmount : 0}{' '}
             
-              {getTokenInfo(chainId, ZeroAddress)?.label}  <Avatar src={getTokenInfo(chainId, ZeroAddress)?.image} ></Avatar>
+              {getTokenInfo(chainId, value)?.label}  <Avatar src={getTokenInfo(chainId, value)?.image} ></Avatar>
               
            
               </h1>
@@ -396,6 +434,9 @@ export const ClaimPage = () => {
            <h1 className={classes.links}> 👀 😢
             </h1>   
           </div> 
+          } 
+          </>
+          
           }
           
 
@@ -408,6 +449,7 @@ export const ClaimPage = () => {
             className={classes.btn}
             onClick={async () => {
               setSendModal(true);
+              setTokenValue(availableAmount);
 
             }}
           >
@@ -416,6 +458,11 @@ export const ClaimPage = () => {
 
       </div>
     </Paper>
+    { sendSuccess && <Confetti
+      width={dimensions.width}
+      height={dimensions.height}
+    />
+    }
     </>
   );
 };

@@ -1,12 +1,12 @@
 import { ethers, BigNumberish, getAddress, ZeroAddress } from "ethers"
 import { getProvider } from "./web3";
 import { BaseTransaction } from '@safe-global/safe-apps-sdk';
-import { SafeMultisigConfirmation, SafeMultisigTransaction } from "./services";
 
 const SAFE_ABI = [
     "function isModuleEnabled(address module) public view returns (bool)",
     "function nonce() public view returns (uint256)",
     "function enableModule(address module) public",
+    "function isModuleInstalled(uint256 moduleType, address module, bytes calldata additionalContext) public view returns (bool)",
     "function setFallbackHandler(address module) public",
     "function setGuard(address module) public",
     "function execTransaction(address to,uint256 value,bytes calldata data,uint8 operation,uint256 safeTxGas,uint256 baseGas,uint256 gasPrice,address gasToken,address payable refundReceiver,bytes memory signatures) public payable returns (bool success)"
@@ -26,6 +26,11 @@ export const isModuleEnabled = async(safeAddress: string, module: string): Promi
     const safe = await getSafe(safeAddress)
     return await safe.isModuleEnabled(module)
 } 
+
+export const isModuleInstalled= async(safeAddress: string, module: string, moduleType: number): Promise<boolean> => {
+    const safe = await getSafe(safeAddress)
+    return await safe.isModuleInstalled(moduleType, module, '0x')
+}
 
 
 export const isGuardEnabled = async(safeAddress: string, module: string): Promise<boolean> => {
